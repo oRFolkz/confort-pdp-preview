@@ -1186,10 +1186,22 @@ h2.h-display { font-size: var(--fs-2xl); }
   :root {
     --fs-2xl: 2rem;
     --fs-3xl: 3rem;
-    --space-7: 4rem;
+    --space-5: 2rem;
+    --space-6: 2.5rem;
+    --space-7: 3rem;
   }
+  .section { padding: var(--space-5) 0; }
+  .hero { padding: var(--space-3) 0 var(--space-4); }
   .hero-grid,
-  .closing-grid { grid-template-columns: 1fr; gap: var(--space-5); }
+  .closing-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+
+  /* Buybox mais compacto no mobile */
+  .eyebrow { margin-bottom: var(--space-2); }
+  .product-info .eyebrow { margin-bottom: var(--space-1); }
+  .product-tag { margin-bottom: var(--space-3); }
+  .price { margin: 0 0 var(--space-3); font-size: var(--fs-xl); }
+  .color-select { margin-bottom: var(--space-3); }
+  .cta-stack { margin-bottom: var(--space-3); }
   .closing-card { position: static; }
   .experience-split,
   .features-split {
