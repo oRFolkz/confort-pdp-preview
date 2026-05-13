@@ -1217,7 +1217,68 @@ h2.h-display { font-size: var(--fs-2xl); }
   }
   .nav { display: none; }
   .event-row { grid-template-columns: 1fr; gap: var(--space-1); }
-  .footer-grid { grid-template-columns: 1fr; }
+  /* Footer centralizado no mobile */
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .site-footer .footer-grid > div > nav {
+    align-items: center;
+  }
+  .site-footer .footer-copy {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Features — topicos viram tabs horizontais no mobile */
+  .features-content { padding: var(--space-3) 0 var(--space-5); }
+  .features-list {
+    flex-direction: row;
+    gap: var(--space-1);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    padding: var(--space-3) var(--space-4);
+    margin: 0;
+    scroll-snap-type: x proximity;
+  }
+  .features-list::-webkit-scrollbar { display: none; }
+  .feature-row,
+  .feature-row:first-child {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    grid-template-columns: none;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-bg);
+    width: auto;
+    scroll-snap-align: start;
+  }
+  .feature-row::before { display: none; }
+  .feature-row > div { display: contents; }
+  .feature-row .feature-title {
+    display: inline;
+    font-size: var(--fs-sm);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .feature-row .feature-desc { display: none; }
+  .feature-row.is-active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    padding-left: 1rem;
+  }
+  .feature-row.is-active .feature-num,
+  .feature-row.is-active .feature-title {
+    color: var(--color-bg);
+  }
 
   .envolvimento-stage {
     grid-template-columns: 1fr;
@@ -1890,7 +1951,7 @@ h2.h-display { font-size: var(--fs-2xl); }
       </div>
     </div>
 
-    <div style="margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid rgba(201, 184, 163, 0.15); font-size: var(--fs-xs); color: #8A7560; display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap;">
+    <div class="footer-copy" style="margin-top: var(--space-5); padding-top: var(--space-3); border-top: 1px solid rgba(201, 184, 163, 0.15); font-size: var(--fs-xs); color: #8A7560; display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap;">
       <span>© 2026 Confort Supremo Store. Todos os direitos reservados.</span>
       <span><em>Feito para durar — assim como o descanso que você merece.</em></span>
     </div>
