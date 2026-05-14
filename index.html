@@ -11,19 +11,19 @@
 
 <style>
 /* ==========================================================
-   1. TOKENS — DARK MODE
+   1. TOKENS — paleta nude/couro (igual ao produto.html)
    ========================================================== */
 :root {
-  --color-bg:            #1F1611;
-  --color-bg-elev:       #2A1F18;
-  --color-bg-soft:       #3A2A1F;
-  --color-border:        rgba(201, 184, 163, 0.15);
-  --color-text:          #F0E5D2;
-  --color-text-muted:    #C9B8A3;
-  --color-text-dim:      #8A7560;
-  --color-accent:        #D4A574;
-  --color-accent-hover:  #C8945F;
-  --color-accent-soft:   rgba(212, 165, 116, 0.12);
+  --color-bg:            #FBF8F3;
+  --color-bg-elev:       #F4EDE2;
+  --color-bg-soft:       #E8DCC8;
+  --color-border:        #D8CBB6;
+  --color-text:          #3A2A1F;
+  --color-text-muted:    #6B5544;
+  --color-text-dim:      #A99378;
+  --color-accent:        #4A2E22;
+  --color-accent-hover:  #5C3B2C;
+  --color-accent-soft:   rgba(74, 46, 34, 0.08);
 
   --font-display: 'Montserrat', system-ui, sans-serif;
   --font-body:    'Montserrat', system-ui, sans-serif;
@@ -153,9 +153,9 @@ h2.h-display { font-size: var(--fs-2xl); }
   top: 0;
   z-index: 50;
   height: var(--header-h);
-  background: rgba(31, 22, 17, 0.78);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(251, 248, 243, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
 }
 .site-header .container {
@@ -195,6 +195,23 @@ h2.h-display { font-size: var(--fs-2xl); }
   isolation: isolate;
   margin-top: calc(-1 * var(--header-h));
   padding-top: var(--header-h);
+  /* Override pra texto permanecer claro sobre foto escura */
+  --color-text:       #F0E5D2;
+  --color-text-muted: #C9B8A3;
+  --color-border:     rgba(240, 229, 210, 0.20);
+}
+.hero .btn-primary {
+  background: var(--color-accent);
+  color: #F0E5D2;
+}
+.hero .btn-primary:hover { background: var(--color-accent-hover); }
+.hero .btn-ghost {
+  border-color: rgba(240, 229, 210, 0.25);
+  color: #F0E5D2;
+}
+.hero .btn-ghost:hover {
+  border-color: #F0E5D2;
+  color: #F0E5D2;
 }
 .hero-bg {
   position: absolute;
@@ -321,8 +338,8 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 .weight-item.is-featured {
   margin-top: var(--space-2);
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.10) 0%, rgba(212, 165, 116, 0.04) 100%);
-  border: 1px solid rgba(212, 165, 116, 0.25);
+  background: var(--color-bg-elev);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: var(--space-4);
 }
@@ -337,7 +354,7 @@ h2.h-display { font-size: var(--fs-2xl); }
   padding: var(--space-4) 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  background: var(--color-bg);
+  background: var(--color-bg-elev);
 }
 .logos-band::before,
 .logos-band::after {
@@ -350,11 +367,11 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 .logos-band::before {
   left: 0;
-  background: linear-gradient(to right, var(--color-bg) 0%, rgba(31, 22, 17, 0) 100%);
+  background: linear-gradient(to right, var(--color-bg-elev) 0%, rgba(244, 237, 226, 0) 100%);
 }
 .logos-band::after {
   right: 0;
-  background: linear-gradient(to left, var(--color-bg) 0%, rgba(31, 22, 17, 0) 100%);
+  background: linear-gradient(to left, var(--color-bg-elev) 0%, rgba(244, 237, 226, 0) 100%);
 }
 .logos-track {
   display: flex;
@@ -366,8 +383,9 @@ h2.h-display { font-size: var(--fs-2xl); }
   height: 44px;
   width: auto;
   margin-right: var(--space-6);
-  opacity: 0.85;
-  filter: brightness(0) invert(1);
+  /* Tinta as logos brancas em marrom escuro (#3A2A1F) */
+  filter: brightness(0) saturate(100%) invert(13%) sepia(38%) saturate(518%) hue-rotate(338deg) brightness(91%) contrast(86%);
+  opacity: 0.7;
   transition: opacity var(--transition);
 }
 .logos-track img:hover { opacity: 1; }
@@ -463,6 +481,10 @@ h2.h-display { font-size: var(--fs-2xl); }
   justify-content: center;
   overflow: hidden;
   isolation: isolate;
+  /* Override pra texto permanecer claro sobre foto escura */
+  --color-text:       #F0E5D2;
+  --color-text-muted: #C9B8A3;
+  --color-text-dim:   #8A7560;
 }
 .spaces-bg {
   position: absolute;
@@ -719,9 +741,11 @@ h2.h-display { font-size: var(--fs-2xl); }
    ========================================================== */
 .site-footer {
   padding: var(--space-5) 0;
-  background: #15100C;
-  border-top: 1px solid var(--color-border);
+  background: #1F1611;
+  color: #C9B8A3;
+  border-top: 1px solid #1F1611;
 }
+.site-footer .brand { color: #F0E5D2; }
 .footer-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -731,28 +755,28 @@ h2.h-display { font-size: var(--fs-2xl); }
 .footer-tag {
   font-family: var(--font-display);
   font-size: var(--fs-sm);
-  color: var(--color-text-muted);
+  color: #C9B8A3;
   font-style: italic;
 }
 .footer-title {
   font-size: var(--fs-xs);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-text-dim);
+  color: #8A7560;
   margin-bottom: var(--space-2);
 }
 .site-footer nav a {
   font-size: var(--fs-sm);
-  color: var(--color-text-muted);
+  color: #C9B8A3;
   transition: color var(--transition);
 }
-.site-footer nav a:hover { color: var(--color-accent); }
+.site-footer nav a:hover { color: #F0E5D2; }
 .footer-copy {
   margin-top: var(--space-5);
   padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid rgba(201, 184, 163, 0.15);
   font-size: var(--fs-xs);
-  color: var(--color-text-dim);
+  color: #8A7560;
   display: flex;
   justify-content: space-between;
   gap: var(--space-3);
