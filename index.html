@@ -199,7 +199,9 @@ h2.h-display { font-size: var(--fs-2xl); }
   --color-text:       #F0E5D2;
   --color-text-muted: #C9B8A3;
   --color-border:     rgba(240, 229, 210, 0.20);
+  color: var(--color-text);
 }
+.hero .hero-sub { color: var(--color-text-muted); }
 .hero .btn-primary {
   background: var(--color-accent);
   color: #F0E5D2;
@@ -263,11 +265,12 @@ h2.h-display { font-size: var(--fs-2xl); }
 .hero-content h1 {
   font-family: var(--font-display);
   font-size: clamp(2.25rem, 4.6vw, 4rem);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-light);
   line-height: 1.08;
   letter-spacing: -0.015em;
   margin: 0 0 var(--space-4);
 }
+.hero-content h1 strong { font-weight: var(--fw-bold); }
 .hero-content .hero-sub {
   color: var(--color-text-muted);
   font-size: var(--fs-md);
@@ -485,7 +488,9 @@ h2.h-display { font-size: var(--fs-2xl); }
   --color-text:       #F0E5D2;
   --color-text-muted: #C9B8A3;
   --color-text-dim:   #8A7560;
+  color: var(--color-text);
 }
+.spaces .spaces-content p { color: var(--color-text-muted); }
 .spaces-bg {
   position: absolute;
   inset: 0;
@@ -869,7 +874,7 @@ h2.h-display { font-size: var(--fs-2xl); }
       <h1>
         Você cuida de tudo.<br>
         Está na hora de alguém<br>
-        cuidar de você.
+        <strong>cuidar de você.</strong>
       </h1>
       <p class="hero-sub">
         A poltrona que reconstrói você. Todos os dias. Para quem entende que descanso de qualidade não é luxo: é o que te mantém inteiro.
