@@ -421,13 +421,44 @@ h2.h-display { font-size: var(--fs-2xl); }
 .lifestyle-tile:hover img { transform: scale(1.04); }
 
 /* ==========================================================
-   9. FEATURES
+   9. FEATURES — full-bleed com swap interativo
    ========================================================== */
-.features-grid {
+.features-split {
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: var(--space-6);
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-height: 560px;
+}
+.features-image {
+  position: relative;
+  overflow: hidden;
+  order: 2;
+  min-height: 560px;
+}
+.features-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 600ms ease, transform 800ms ease;
+  pointer-events: none;
+}
+.features-image img.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+.features-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-6) var(--space-5);
+  padding-left: max(var(--space-5), calc((100vw - var(--container)) / 2 + var(--space-4)));
+  max-width: 760px;
+  width: 100%;
 }
 .features-list {
   display: flex;
@@ -435,17 +466,54 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 .feature-row {
   display: grid;
-  grid-template-columns: 56px 1fr;
+  grid-template-columns: 32px 1fr;
+  align-items: baseline;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--color-border);
+  width: 100%;
+  text-align: left;
+  background: none;
+  cursor: pointer;
+  position: relative;
+  transition: padding-left var(--transition), background var(--transition);
 }
 .feature-row:first-child { border-top: 1px solid var(--color-border); }
+.feature-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform var(--transition);
+}
+.feature-row:hover { background: var(--color-accent-soft); }
+.feature-row:hover .feature-num,
+.feature-row:hover .feature-title { color: var(--color-accent); }
+.feature-row.is-active::before { transform: scaleY(1); }
+.feature-row.is-active {
+  background: var(--color-accent-soft);
+  padding-left: var(--space-3);
+}
+.feature-row.is-active .feature-num { color: var(--color-accent); }
+.feature-row.is-active .feature-title {
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+.feature-row:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
 .feature-num {
   font-family: var(--font-display);
-  font-size: var(--fs-md);
+  font-size: var(--fs-sm);
   font-weight: var(--fw-light);
-  color: var(--color-accent);
+  color: var(--color-text-dim);
+  transition: color var(--transition);
 }
 .feature-title {
   font-family: var(--font-display);
@@ -453,23 +521,12 @@ h2.h-display { font-size: var(--fs-2xl); }
   font-weight: var(--fw-regular);
   margin: 0 0 0.25rem;
   color: var(--color-text);
+  transition: color var(--transition), font-weight var(--transition);
 }
 .feature-desc {
   margin: 0;
-  color: var(--color-text-muted);
   font-size: var(--fs-sm);
-}
-.features-image {
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(135deg, #F4EDE2 0%, #E8DCC8 100%);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-.features-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: normal;
+  color: var(--color-text-muted);
 }
 
 /* ==========================================================
@@ -809,7 +866,56 @@ h2.h-display { font-size: var(--fs-2xl); }
   .hero-ctas .btn { width: 100%; }
 
   .weight-grid { grid-template-columns: 1fr; gap: var(--space-4); }
-  .features-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+  .features-split {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .features-image { min-height: 320px; order: 0; }
+  .features-content {
+    padding: var(--space-5) var(--space-4);
+    padding-left: var(--space-4);
+    max-width: 100%;
+  }
+  .features-list {
+    flex-direction: row;
+    gap: var(--space-1);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    padding: var(--space-3) 0;
+    scroll-snap-type: x proximity;
+  }
+  .features-list::-webkit-scrollbar { display: none; }
+  .feature-row,
+  .feature-row:first-child {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    grid-template-columns: none;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-bg);
+    width: auto;
+    scroll-snap-align: start;
+  }
+  .feature-row::before { display: none; }
+  .feature-row > div { display: contents; }
+  .feature-row .feature-title {
+    display: inline;
+    font-size: var(--fs-sm);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .feature-row .feature-desc { display: none; }
+  .feature-row.is-active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    padding-left: 1rem;
+  }
+  .feature-row.is-active .feature-num,
+  .feature-row.is-active .feature-title { color: var(--color-bg); }
 
   .lifestyle { grid-template-columns: 1fr; }
 
@@ -973,49 +1079,67 @@ h2.h-display { font-size: var(--fs-2xl); }
   <!-- ==========================================================
        6. FEATURES
        ========================================================== -->
-  <section class="section features">
-    <div class="container">
-      <div class="features-grid">
+  <section class="features">
+    <div class="features-split">
 
-        <div class="features-list">
-          <div class="feature-row">
+      <div class="features-content">
+        <div class="features-list" role="tablist" aria-label="Recursos da poltrona">
+          <button type="button" class="feature-row is-active" data-feature="01" role="tab" aria-selected="true">
             <span class="feature-num">01</span>
             <div>
               <h3 class="feature-title">Airbag de braço</h3>
-              <p class="feature-desc">A tensão da rotina vai embora nos primeiros 3 minutos.</p>
             </div>
-          </div>
-          <div class="feature-row">
+          </button>
+          <button type="button" class="feature-row" data-feature="02" role="tab" aria-selected="false">
             <span class="feature-num">02</span>
-            <div><h3 class="feature-title">Gravidade Zero</h3></div>
-          </div>
-          <div class="feature-row">
+            <div>
+              <h3 class="feature-title">Gravidade Zero</h3>
+            </div>
+          </button>
+          <button type="button" class="feature-row" data-feature="03" role="tab" aria-selected="false">
             <span class="feature-num">03</span>
-            <div><h3 class="feature-title">IA Multifuncional</h3></div>
-          </div>
-          <div class="feature-row">
+            <div>
+              <h3 class="feature-title">IA Multifuncional</h3>
+              <p class="feature-desc">Ela aprende o que você precisa antes de você pedir.</p>
+            </div>
+          </button>
+          <button type="button" class="feature-row" data-feature="04" role="tab" aria-selected="false">
             <span class="feature-num">04</span>
-            <div><h3 class="feature-title">8 Rolos nas Costas</h3></div>
-          </div>
-          <div class="feature-row">
+            <div>
+              <h3 class="feature-title">8 Rolos nas Costas</h3>
+            </div>
+          </button>
+          <button type="button" class="feature-row" data-feature="05" role="tab" aria-selected="false">
             <span class="feature-num">05</span>
-            <div><h3 class="feature-title">Áudio HiFi Bluetooth</h3></div>
-          </div>
-          <div class="feature-row">
+            <div>
+              <h3 class="feature-title">Áudio HiFi Bluetooth</h3>
+            </div>
+          </button>
+          <button type="button" class="feature-row" data-feature="06" role="tab" aria-selected="false">
             <span class="feature-num">06</span>
-            <div><h3 class="feature-title">Modo Sono</h3></div>
-          </div>
-          <div class="feature-row">
+            <div>
+              <h3 class="feature-title">Modo Sono</h3>
+            </div>
+          </button>
+          <button type="button" class="feature-row" data-feature="07" role="tab" aria-selected="false">
             <span class="feature-num">07</span>
-            <div><h3 class="feature-title">Airbag corpo todo</h3></div>
-          </div>
+            <div>
+              <h3 class="feature-title">Airbag corpo todo</h3>
+            </div>
+          </button>
         </div>
-
-        <div class="features-image">
-          <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_29.jpg" alt="Poltrona com airbags em destaque" loading="lazy">
-        </div>
-
       </div>
+
+      <div class="features-image">
+        <img class="is-active" data-feature="01" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_28.jpg" alt="Airbag de braço" loading="lazy">
+        <img data-feature="02" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_22.jpg" alt="Gravidade Zero" loading="lazy">
+        <img data-feature="03" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_25.jpg" alt="IA Multifuncional" loading="lazy">
+        <img data-feature="04" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_17.jpg" alt="8 Rolos nas Costas" loading="lazy">
+        <img data-feature="05" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_23.jpg" alt="Áudio HiFi Bluetooth" loading="lazy">
+        <img data-feature="06" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_9.jpg" alt="Modo Sono" loading="lazy">
+        <img data-feature="07" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_2.jpg" alt="Airbag corpo todo" loading="lazy">
+      </div>
+
     </div>
   </section>
 
@@ -1048,7 +1172,7 @@ h2.h-display { font-size: var(--fs-2xl); }
     <div class="container">
       <h2>Quem sabe o que é bom, <strong>não volta atrás.</strong></h2>
       <div class="gold-line"></div>
-      <p class="intro">98% dos que experimentam dão nota 10.</p>
+
 
       <div class="testi-row">
         <div class="testi-card">
@@ -1221,6 +1345,27 @@ h2.h-display { font-size: var(--fs-2xl); }
     </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    const rows = document.querySelectorAll('.features-list .feature-row');
+    const imgs = document.querySelectorAll('.features-image img');
+
+    rows.forEach(row => {
+      row.addEventListener('click', () => {
+        const key = row.dataset.feature;
+        rows.forEach(r => {
+          const active = r === row;
+          r.classList.toggle('is-active', active);
+          r.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        imgs.forEach(img => {
+          img.classList.toggle('is-active', img.dataset.feature === key);
+        });
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
