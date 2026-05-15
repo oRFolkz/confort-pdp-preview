@@ -295,6 +295,11 @@ h2.h-display { font-size: var(--fs-2xl); }
   gap: var(--space-6);
   align-items: start;
 }
+.weight-intro {
+  position: sticky;
+  top: calc(var(--header-h) + var(--space-4));
+  align-self: start;
+}
 .weight-title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 3.5vw, 3rem);
@@ -456,8 +461,9 @@ h2.h-display { font-size: var(--fs-2xl); }
   flex-direction: column;
   justify-content: center;
   padding: var(--space-6) var(--space-5);
-  padding-left: max(var(--space-5), calc((100vw - var(--container)) / 2 + var(--space-4)));
-  max-width: 760px;
+  padding-left: 0;
+  max-width: 640px;
+  justify-self: end;
   width: 100%;
 }
 .features-list {
@@ -520,7 +526,6 @@ h2.h-display { font-size: var(--fs-2xl); }
   font-size: var(--fs-md);
   font-weight: var(--fw-regular);
   margin: 0 0 0.25rem;
-  color: var(--color-text);
   transition: color var(--transition), font-weight var(--transition);
 }
 .feature-desc {
@@ -554,15 +559,25 @@ h2.h-display { font-size: var(--fs-2xl); }
   z-index: -2;
 }
 .spaces-bg img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 800ms ease, transform 6000ms ease;
+}
+.spaces-bg img.is-active {
+  opacity: 1;
+  transform: scale(1);
 }
 .spaces-bg::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, rgba(31, 22, 17, 0.78) 0%, rgba(31, 22, 17, 0.55) 60%, rgba(31, 22, 17, 0.85) 100%);
+  z-index: 1;
 }
 .spaces-content {
   position: relative;
@@ -586,6 +601,18 @@ h2.h-display { font-size: var(--fs-2xl); }
   margin: 0 auto;
   font-size: var(--fs-md);
 }
+.spaces-sublabel {
+  display: inline-block;
+  margin-top: var(--space-3);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  transition: opacity 400ms ease;
+  min-height: 1em;
+}
+.spaces-sublabel.is-fading { opacity: 0; }
+
 .spaces-slider {
   position: absolute;
   left: 0; right: 0; bottom: var(--space-5);
@@ -597,113 +624,157 @@ h2.h-display { font-size: var(--fs-2xl); }
   gap: var(--space-3);
 }
 .spaces-slot {
-  padding-top: var(--space-2);
+  position: relative;
+  padding: var(--space-2) 0 0;
+  background: none;
+  border: none;
   border-top: 1px solid rgba(201, 184, 163, 0.25);
   color: var(--color-text-dim);
+  font-family: var(--font-display);
   font-size: var(--fs-xs);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: var(--fw-light);
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--transition);
 }
-.spaces-slot.is-active {
-  border-top-color: var(--color-accent);
-  color: var(--color-text);
+.spaces-slot:hover { color: var(--color-text); }
+.spaces-slot:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+.spaces-slot::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 1px;
+  width: 0;
+  background: var(--color-accent);
+}
+.spaces-slot.is-active { color: var(--color-text); }
+.spaces-slot.is-active::after {
+  width: 100%;
+  animation: spaces-progress 5000ms linear forwards;
+}
+.spaces.is-paused .spaces-slot.is-active::after { animation-play-state: paused; }
+.spaces.is-manual .spaces-slot.is-active::after { animation: none; width: 100%; }
+@keyframes spaces-progress {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spaces-bg img { transition: opacity 200ms ease; transform: none; }
+  .spaces-slot.is-active::after { animation: none; width: 100%; }
 }
 
 /* ==========================================================
    11. DEPOIMENTOS + STATS
    ========================================================== */
-.testi h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: var(--fw-light);
-  line-height: 1.1;
-  margin: 0;
-  color: var(--color-text);
-}
-.testi h2 strong { font-weight: var(--fw-bold); }
-.testi .intro {
-  color: var(--color-text-muted);
-  margin: var(--space-3) 0 var(--space-5);
-  max-width: 600px;
-}
-.testi-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-2);
-  margin-bottom: var(--space-5);
-}
-.testi-card {
+/* Helper PH — wrapper de mídia com aspect-ratio (igual ao produto.html) */
+.ph {
   position: relative;
-  aspect-ratio: 2 / 3;
+  width: 100%;
+  background: linear-gradient(135deg, #E8DCC8 0%, #F0E5D2 50%, #E8DCC8 100%);
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--color-bg-elev);
 }
-.testi-card img,
-.testi-card video {
+.ph-2-3 { aspect-ratio: 2 / 3; }
+.ph-3-2 { aspect-ratio: 3 / 2; }
+.ph-16-9 { aspect-ratio: 16 / 9; }
+.ph > img,
+.ph > video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  position: relative;
+  z-index: 1;
 }
-.testi-badge {
-  position: absolute;
-  top: var(--space-2);
-  left: var(--space-2);
-  right: var(--space-2);
-  z-index: 2;
-  padding: 0.6rem 0.9rem;
-  background: var(--color-accent);
-  color: var(--color-bg);
+
+.testimonials h2 {
   font-family: var(--font-display);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  border-radius: var(--radius-sm);
-  text-align: center;
-  line-height: 1.2;
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--space-5);
+}
+.testimonials h2 strong { font-weight: var(--fw-bold); }
+
+/* Carrossel horizontal full-bleed (3.5 cards desktop / 1.5 mobile) */
+.testi-row {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-right: calc(-1 * max(var(--space-4), (100vw - var(--container)) / 2 + var(--space-4)));
+  padding-right: max(var(--space-4), calc((100vw - var(--container)) / 2 + var(--space-4)));
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-bottom: var(--space-6);
+}
+.testi-row::-webkit-scrollbar { display: none; }
+.testi-row > * {
+  flex: 0 0 calc((min(100vw, var(--container)) - 2 * var(--space-4) - 3 * var(--space-3)) / 3.5);
+  scroll-snap-align: start;
+}
+
+.testi-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.testi-card .ph { border-radius: 0; border: none; }
+.testi-play {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: opacity 300ms ease, background var(--transition);
+}
+.testi-play svg {
+  width: 76px;
+  height: 76px;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.45));
+  transition: transform var(--transition);
+}
+.testi-play:hover { background: rgba(0, 0, 0, 0.28); }
+.testi-play:hover svg { transform: scale(1.08); }
+.testi-play:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: -8px;
+}
+.testi-play.is-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 .testi-caption {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   padding: var(--space-3);
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
-  color: var(--color-text);
+  background: linear-gradient(to top, rgba(58, 42, 31, 0.85), rgba(58, 42, 31, 0));
   font-size: var(--fs-xs);
-  z-index: 1;
+  color: var(--color-bg);
+  z-index: 2;
 }
 .testi-caption strong {
   display: block;
   font-family: var(--font-display);
-  font-size: var(--fs-sm);
   font-weight: var(--fw-regular);
-  margin-bottom: 0.2rem;
-  color: var(--color-text);
+  font-size: var(--fs-sm);
+  margin-bottom: 0.25rem;
+  color: var(--color-bg);
 }
 
-.carousel-nav {
-  display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-6);
-}
-.carousel-arrow {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  transition: all var(--transition);
-}
-.carousel-arrow:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-.carousel-arrow svg { width: 18px; height: 18px; }
-
-.stats {
+.stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
@@ -712,44 +783,63 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 .stat-num {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-size: var(--fs-3xl);
   font-weight: var(--fw-light);
-  color: var(--color-accent);
   line-height: 1;
   margin: 0 0 var(--space-1);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
 }
 .stat-label {
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
-  max-width: 200px;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  max-width: 220px;
+  margin: 0;
 }
 
 /* ==========================================================
-   12. BUNDLE — 4 cards
+   12. BUNDLE — O QUE VEM JUNTO
    ========================================================== */
+.bundle {
+  background: var(--color-bg-elev);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.bundle h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--space-5);
+}
+.bundle h2 strong { font-weight: var(--fw-bold); }
+
 .bundle-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
   gap: var(--space-3);
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-right: calc(-1 * max(var(--space-4), (100vw - var(--container)) / 2 + var(--space-4)));
+  padding-right: max(var(--space-4), calc((100vw - var(--container)) / 2 + var(--space-4)));
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   margin-bottom: var(--space-4);
 }
-.bcard .bcard-img {
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  margin-bottom: var(--space-3);
-  background: var(--color-bg-elev);
+.bundle-grid::-webkit-scrollbar { display: none; }
+.bundle-grid > * {
+  flex: 0 0 calc((min(100vw, var(--container)) - 2 * var(--space-4) - 3 * var(--space-3)) / 3.5);
+  scroll-snap-align: start;
 }
-.bcard .bcard-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.bcard .ph { margin-bottom: var(--space-3); }
 .bcard h3 {
   font-family: var(--font-display);
-  font-size: var(--fs-md);
-  font-weight: var(--fw-medium);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-regular);
   margin: 0 0 var(--space-1);
   color: var(--color-text);
 }
@@ -760,21 +850,17 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 
 /* ==========================================================
-   13. EVENTOS
+   13. EVENTOS — SENTE ANTES DE DECIDIR
    ========================================================== */
-.events h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: var(--fw-light);
-  line-height: 1.1;
-  margin: 0;
-  color: var(--color-text);
+.events {
+  background: var(--color-bg-elev);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 }
-.events h2 strong { font-weight: var(--fw-bold); }
 .events .intro {
   color: var(--color-text-muted);
-  margin: var(--space-3) 0 var(--space-5);
-  max-width: 580px;
+  margin-bottom: var(--space-5);
+  max-width: 600px;
 }
 .event-row {
   display: grid;
@@ -793,10 +879,188 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 .event-meta {
   font-size: var(--fs-xs);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ==========================================================
+   13a. MODELOS — comparação 50/50
+   ========================================================== */
+.models { background: var(--color-bg-elev); }
+.models-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--space-6);
+}
+.models-header h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3);
+}
+.models-header h2 strong { font-weight: var(--fw-bold); }
+.models-header p {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+.models-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+.model-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.model-card .ph { border-radius: 0; border: none; }
+.model-body {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+}
+.model-tag {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-text-dim);
+  margin: 0;
 }
+.model-tag.is-soon { color: var(--color-text-dim); }
+.model-tag.is-live { color: var(--color-accent); }
+.model-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-light);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0;
+}
+.model-name strong { font-weight: var(--fw-bold); }
+.model-lead {
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  margin: 0 0 var(--space-1);
+}
+.model-specs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+.model-specs li {
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: var(--space-1);
+  align-items: baseline;
+}
+.model-specs li::before {
+  content: "—";
+  color: var(--color-accent);
+  font-weight: var(--fw-medium);
+}
+.model-cta {
+  margin-top: auto;
+  padding-top: var(--space-3);
+}
+.btn.is-disabled {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==========================================================
+   13b. FAQ
+   ========================================================== */
+.faq-header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto var(--space-6);
+}
+.faq-header h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-light);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 0 0 var(--space-3);
+}
+.faq-header h2 strong { font-weight: var(--fw-bold); }
+.faq-header p {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+.faq-list {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.faq-item {
+  border-bottom: 1px solid var(--color-border);
+}
+.faq-item:first-child { border-top: 1px solid var(--color-border); }
+.faq-item summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-regular);
+  color: var(--color-text);
+  transition: color var(--transition);
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:hover { color: var(--color-accent); }
+.faq-item summary:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 4px;
+}
+.faq-item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px, 1px 100%;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  transition: transform var(--transition);
+}
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+  color: var(--color-accent);
+}
+.faq-item[open] summary { color: var(--color-accent); }
+.faq-answer {
+  padding: 0 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+  max-width: 620px;
+  line-height: 1.6;
+}
+.faq-answer p { margin: 0; }
 
 /* ==========================================================
    14. FOOTER
@@ -847,6 +1111,190 @@ h2.h-display { font-size: var(--fs-2xl); }
 .footer-copy em { font-style: italic; }
 
 /* ==========================================================
+   14b. INTENSIDADE — 3 níveis de personalização
+   ========================================================== */
+.intensidade { background: var(--color-bg-elev); }
+.intensidade-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-6);
+}
+.intensidade-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: var(--fw-light);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0 0 var(--space-3);
+  color: var(--color-text);
+}
+.intensidade-title strong { font-weight: var(--fw-bold); }
+.intensidade-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+.icard {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.icard:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+.icard-level {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-dim);
+  margin: 0 0 var(--space-2);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.icard-name {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-light);
+  letter-spacing: 0.3em;
+  margin: 0 0 var(--space-1);
+  color: var(--color-text);
+}
+.icard-tag {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-4);
+}
+.icard-bars {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: var(--space-3);
+}
+.icard-bar {
+  width: 6px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+.icard-bar.is-on { background: var(--color-accent); }
+.icard-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================
+   14c. INTELIGÊNCIA — Display LCD
+   ========================================================== */
+.inteligencia {
+  background: var(--color-bg);
+  text-align: center;
+}
+.inteligencia-eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  margin: 0 0 var(--space-3);
+}
+.inteligencia-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, var(--fs-4xl));
+  font-weight: var(--fw-light);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+  color: var(--color-text);
+}
+.inteligencia-title strong {
+  font-weight: var(--fw-bold);
+  display: block;
+}
+.inteligencia-subtitle {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin: 0 0 var(--space-4);
+}
+.inteligencia-desc {
+  max-width: 580px;
+  margin: 0 auto var(--space-6);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.inteligencia-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-6);
+  max-width: 720px;
+  margin: 0 auto var(--space-6);
+}
+.benefit {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: var(--space-2);
+  align-items: center;
+  text-align: left;
+}
+.benefit-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+.benefit-icon svg { width: 16px; height: 16px; }
+.benefit-text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  margin: 0;
+  color: var(--color-text);
+}
+.control-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.control-ghost {
+  position: absolute;
+  top: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: var(--fw-light);
+  color: var(--color-bg-soft);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+  z-index: 0;
+}
+.control-wrapper .ph {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================
    15. RESPONSIVE
    ========================================================== */
 @media (max-width: 960px) {
@@ -866,6 +1314,7 @@ h2.h-display { font-size: var(--fs-2xl); }
   .hero-ctas .btn { width: 100%; }
 
   .weight-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+  .weight-intro { position: static; }
   .features-split {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -873,7 +1322,6 @@ h2.h-display { font-size: var(--fs-2xl); }
   .features-image { min-height: 320px; order: 0; }
   .features-content {
     padding: var(--space-5) var(--space-4);
-    padding-left: var(--space-4);
     max-width: 100%;
   }
   .features-list {
@@ -919,12 +1367,32 @@ h2.h-display { font-size: var(--fs-2xl); }
 
   .lifestyle { grid-template-columns: 1fr; }
 
-  .spaces-slider { display: none; }
+  .intensidade-grid { grid-template-columns: 1fr; }
+  .inteligencia-grid { grid-template-columns: 1fr; }
+  .control-ghost { top: -16px; }
+  .models-grid { grid-template-columns: 1fr; }
 
-  .testi-row { grid-template-columns: 1fr 1fr; }
-  .stats { grid-template-columns: 1fr; gap: var(--space-3); }
+  .spaces-slider {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100vw - 2 * var(--space-4) - var(--space-3)) / 2.5);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .spaces-slider::-webkit-scrollbar { display: none; }
+  .spaces-slot { scroll-snap-align: start; }
 
-  .bundle-grid { grid-template-columns: 1fr 1fr; }
+  .testi-row > * {
+    flex: 0 0 calc((100vw - 2 * var(--space-4) - var(--space-3)) / 1.5);
+  }
+  .stats-row { grid-template-columns: 1fr; gap: var(--space-3); }
+
+  .bundle-grid > * {
+    flex: 0 0 calc((100vw - 2 * var(--space-4) - var(--space-3)) / 1.5);
+  }
 
   .event-row { grid-template-columns: 1fr; gap: var(--space-1); }
 
@@ -941,8 +1409,7 @@ h2.h-display { font-size: var(--fs-2xl); }
 }
 
 @media (max-width: 600px) {
-  .testi-row { grid-template-columns: 1fr; }
-  .bundle-grid { grid-template-columns: 1fr; }
+  /* (carrosséis horizontais cobrem o caso 1-up via flex 1.5) */
 }
 </style>
 </head>
@@ -956,8 +1423,8 @@ h2.h-display { font-size: var(--fs-2xl); }
     <div class="brand">Confort Supremo Store</div>
     <nav class="nav">
       <a href="produto.html">Produto</a>
-      <a href="#sobre">Sobre</a>
       <a href="#testar">Onde Testar</a>
+      <a href="#faq">FAQ</a>
       <a href="#contato">Contato</a>
     </nav>
     <a href="#agendar" class="btn btn-ghost">Agendar Experiência</a>
@@ -999,7 +1466,7 @@ h2.h-display { font-size: var(--fs-2xl); }
     <div class="container">
       <div class="weight-grid">
 
-        <div>
+        <div class="weight-intro">
           <p class="eyebrow">Antes da poltrona</p>
           <h2 class="weight-title">O dia tem um<br><strong>peso</strong><br>que ninguém vê.</h2>
           <p class="weight-support">Mas o corpo sente cada hora.</p>
@@ -1045,13 +1512,26 @@ h2.h-display { font-size: var(--fs-2xl); }
        ========================================================== -->
   <section class="logos-band" aria-label="Marcas referência">
     <div class="logos-track">
+      <!-- Metade A: 12 logos (6 com alt + 6 repetições visuais aria-hidden) -->
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-tesla-100.png?v=1773873402"        alt="Tesla">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-ferrari-100.png?v=1773873402"      alt="Ferrari">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-mercedes-benz-100.png?v=1773873374" alt="Mercedes-Benz">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-toyota-100.png?v=1773873374"        alt="Toyota">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/bmw-128_1.webp?v=1773842979"               alt="BMW">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/porsche-128_1.webp?v=1773842979"           alt="Porsche">
-      <!-- duplicado para loop infinito -->
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-tesla-100.png?v=1773873402"        alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-ferrari-100.png?v=1773873402"      alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-mercedes-benz-100.png?v=1773873374" alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-toyota-100.png?v=1773873374"        alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/bmw-128_1.webp?v=1773842979"               alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/porsche-128_1.webp?v=1773842979"           alt="" aria-hidden="true">
+      <!-- Metade B: cópia idêntica para loop seamless (translateX -50%) -->
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-tesla-100.png?v=1773873402"        alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-ferrari-100.png?v=1773873402"      alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-mercedes-benz-100.png?v=1773873374" alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-toyota-100.png?v=1773873374"        alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/bmw-128_1.webp?v=1773842979"               alt="" aria-hidden="true">
+      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/porsche-128_1.webp?v=1773842979"           alt="" aria-hidden="true">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-tesla-100.png?v=1773873402"        alt="" aria-hidden="true">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-ferrari-100.png?v=1773873402"      alt="" aria-hidden="true">
       <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/icons8-mercedes-benz-100.png?v=1773873374" alt="" aria-hidden="true">
@@ -1144,80 +1624,322 @@ h2.h-display { font-size: var(--fs-2xl); }
   </section>
 
   <!-- ==========================================================
+       6b. INTENSIDADE — 3 níveis
+       ========================================================== -->
+  <section class="section intensidade">
+    <div class="container">
+
+      <div class="intensidade-header">
+        <p class="eyebrow">Personalização</p>
+        <h2 class="intensidade-title">
+          <strong>3 ajustes</strong> de intensidade.<br>
+          Uma para cada momento do seu dia.
+        </h2>
+      </div>
+
+      <div class="intensidade-grid">
+        <div class="icard">
+          <p class="icard-level">Nível 01</p>
+          <h3 class="icard-name">S U A V E</h3>
+          <p class="icard-tag">Compressão gentil</p>
+          <div class="icard-bars" aria-hidden="true">
+            <div class="icard-bar is-on"></div>
+            <div class="icard-bar"></div>
+            <div class="icard-bar"></div>
+          </div>
+          <p class="icard-desc">
+            Para começar o dia ou desacelerar antes de dormir.
+            Pressão leve que prepara o corpo sem invadir.
+          </p>
+        </div>
+
+        <div class="icard">
+          <p class="icard-level">Nível 02</p>
+          <h3 class="icard-name">M O D E R A D A</h3>
+          <p class="icard-tag">Força moderada</p>
+          <div class="icard-bars" aria-hidden="true">
+            <div class="icard-bar is-on"></div>
+            <div class="icard-bar is-on"></div>
+            <div class="icard-bar"></div>
+          </div>
+          <p class="icard-desc">
+            O ponto de equilíbrio. Recuperação efetiva sem desconforto.
+            A escolha que a maioria adota como padrão.
+          </p>
+        </div>
+
+        <div class="icard">
+          <p class="icard-level">Nível 03</p>
+          <h3 class="icard-name">P R O F U N D A</h3>
+          <p class="icard-tag">Pressão profunda</p>
+          <div class="icard-bars" aria-hidden="true">
+            <div class="icard-bar is-on"></div>
+            <div class="icard-bar is-on"></div>
+            <div class="icard-bar is-on"></div>
+          </div>
+          <p class="icard-desc">
+            Para quem chega no limite. Massagem que alcança onde
+            a tensão se esconde há semanas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       6c. INTELIGÊNCIA — Display LCD
+       ========================================================== -->
+  <section class="section inteligencia">
+    <div class="container">
+
+      <p class="inteligencia-eyebrow">Tecnologia</p>
+      <h2 class="inteligencia-title">
+        Display LCD<br>
+        <strong>Inteligente</strong>
+      </h2>
+      <p class="inteligencia-subtitle">Alta definição com toque inteligente</p>
+
+      <p class="inteligencia-desc">
+        Acesso instantâneo para gerenciar suas necessidades de massagem
+        sem esforço. Interface intuitiva com controles personalizáveis
+        para uma experiência única.
+      </p>
+
+      <div class="inteligencia-grid">
+        <div class="benefit">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="benefit-text">Controle automático<br>de airbags</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="benefit-text">Programas pré-definidos<br>personalizáveis</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="benefit-text">Ajuste de intensidade<br>em tempo real</p>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <p class="benefit-text">Timer e controle<br>de aquecimento</p>
+        </div>
+      </div>
+
+      <div class="control-wrapper">
+        <div class="control-ghost" aria-hidden="true">inteligente</div>
+        <div class="ph ph-16-9">
+          <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_28.jpg" alt="Controle remoto LCD da Confort Supremo" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       6d. MODELOS — comparação 50/50 (Essential mock + Supremo)
+       ========================================================== -->
+  <section class="section models">
+    <div class="container">
+
+      <div class="models-header">
+        <p class="eyebrow">Linha Confort</p>
+        <h2>Dois modelos. <strong>Uma filosofia.</strong></h2>
+        <p>Escolha o que cabe no seu espaço — sem abrir mão do conforto.</p>
+      </div>
+
+      <div class="models-grid">
+
+        <article class="model-card">
+          <div class="ph ph-3-2">
+            <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_25.jpg" alt="Confort Essential — modelo compacto" loading="lazy">
+          </div>
+          <div class="model-body">
+            <p class="model-tag is-soon">Compacto · Em breve</p>
+            <h3 class="model-name">Confort <strong>Essential</strong></h3>
+            <p class="model-lead">[mock] O essencial do descanso, em um corpo mais discreto. Pensado para apartamentos e ambientes menores.</p>
+            <ul class="model-specs">
+              <li><span>Massagem em 4 zonas principais</span></li>
+              <li><span>Gravidade Zero</span></li>
+              <li><span>Reclinação manual</span></li>
+              <li><span>Acabamento em couro sintético premium</span></li>
+            </ul>
+            <div class="model-cta">
+              <span class="btn btn-ghost is-disabled" aria-disabled="true">Em breve</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="model-card">
+          <div class="ph ph-3-2">
+            <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_22.jpg" alt="Confort Supremo — topo de linha" loading="lazy">
+          </div>
+          <div class="model-body">
+            <p class="model-tag is-live">Topo de linha · Disponível</p>
+            <h3 class="model-name">Confort <strong>Supremo</strong></h3>
+            <p class="model-lead">A poltrona que reconstrói você. Todos os dias.</p>
+            <ul class="model-specs">
+              <li><span>7 funcionalidades inteligentes</span></li>
+              <li><span>Display LCD touch com IA</span></li>
+              <li><span>22 pontos de pressão · airbag corpo todo</span></li>
+              <li><span>Áudio HiFi Bluetooth · Modo Sono</span></li>
+            </ul>
+            <div class="model-cta">
+              <a href="produto.html" class="btn btn-primary">Conhecer Supremo</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
        7. SEÇÃO "ELA NÃO É APENAS PARA A SUA CASA"
        ========================================================== -->
-  <section class="spaces">
+  <section class="spaces" id="spaces"
+           data-sublabels="Lounges executivos · São Paulo|Spas e bem-estar · Rio de Janeiro|Showrooms premium · Belo Horizonte|Áreas VIP · Brasília|Coberturas privativas · Florianópolis">
     <div class="spaces-bg">
-      <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_23.jpg" alt="Confort Supremo em ambiente premium" loading="lazy">
+      <img class="is-active" data-slot="01" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_23.jpg" alt="Confort Supremo em lounge executivo" loading="lazy">
+      <img data-slot="02" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_22.jpg" alt="Confort Supremo em spa premium" loading="lazy">
+      <img data-slot="03" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_25.jpg" alt="Confort Supremo em showroom" loading="lazy">
+      <img data-slot="04" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_15.jpg" alt="Confort Supremo em área VIP" loading="lazy">
+      <img data-slot="05" src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_20.jpg" alt="Confort Supremo em cobertura privativa" loading="lazy">
     </div>
 
     <div class="spaces-content">
       <h2>Ela não é apenas para a sua casa.</h2>
       <p>Certos espaços têm um padrão que se vê antes mesmo de entrar. A Confort Supremo já faz parte de alguns deles.</p>
+      <span class="spaces-sublabel" aria-live="polite">Lounges executivos · São Paulo</span>
     </div>
 
     <div class="spaces-slider" role="tablist" aria-label="Espaços onde a Confort Supremo está">
-      <div class="spaces-slot is-active">01.</div>
-      <div class="spaces-slot">02.</div>
-      <div class="spaces-slot">03.</div>
-      <div class="spaces-slot">04.</div>
-      <div class="spaces-slot">05.</div>
+      <button type="button" class="spaces-slot is-active" data-slot="01" role="tab" aria-selected="true">01.</button>
+      <button type="button" class="spaces-slot" data-slot="02" role="tab" aria-selected="false">02.</button>
+      <button type="button" class="spaces-slot" data-slot="03" role="tab" aria-selected="false">03.</button>
+      <button type="button" class="spaces-slot" data-slot="04" role="tab" aria-selected="false">04.</button>
+      <button type="button" class="spaces-slot" data-slot="05" role="tab" aria-selected="false">05.</button>
     </div>
   </section>
 
   <!-- ==========================================================
        8. DEPOIMENTOS + STATS
        ========================================================== -->
-  <section class="section testi">
+  <section class="section testimonials">
     <div class="container">
-      <h2>Quem sabe o que é bom, <strong>não volta atrás.</strong></h2>
-      <div class="gold-line"></div>
-
+      <p class="eyebrow">Depoimentos</p>
+      <h2 class="h-display">Quem sabe o que é bom, <strong>não volta atrás.</strong></h2>
 
       <div class="testi-row">
         <div class="testi-card">
-          <video src="https://cdn.shopify.com/videos/c/o/v/86a5353c86c845b09bf9f442297ccc4c.mp4" autoplay loop muted playsinline preload="metadata"></video>
-          <div class="testi-badge">Vida de médico é corrida né</div>
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/86a5353c86c845b09bf9f442297ccc4c.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
           <div class="testi-caption">
             <strong>Dra. Gabriela Schwartzmann</strong>
-            Cirurgiã Plástica
+            Cirurgiã Plástica · "Vida de médico é corrida..."
           </div>
         </div>
         <div class="testi-card">
-          <video src="https://cdn.shopify.com/videos/c/o/v/e3a9daa16c954440b3a3c0bdf9a4813f.mp4" autoplay loop muted playsinline preload="metadata"></video>
-        </div>
-        <div class="testi-card">
-          <video src="https://cdn.shopify.com/videos/c/o/v/eb35d799483a4152ae191f1bef2cbf8a.mp4" autoplay loop muted playsinline preload="metadata"></video>
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/eb35d799483a4152ae191f1bef2cbf8a.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
           <div class="testi-caption">
             <strong>Confort Supremo</strong>
             O lugar onde seu corpo respira
           </div>
         </div>
         <div class="testi-card">
-          <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_20.jpg" alt="Depoimento" loading="lazy">
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/e3a9daa16c954440b3a3c0bdf9a4813f.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
+          <div class="testi-caption">
+            <strong>Cliente</strong>
+            [legenda — confirmar]
+          </div>
         </div>
         <div class="testi-card">
-          <img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_21.jpg" alt="Depoimento" loading="lazy">
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/86a5353c86c845b09bf9f442297ccc4c.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
+          <div class="testi-caption">
+            <strong>Dra. Gabriela Schwartzmann</strong>
+            Cirurgiã Plástica · "Vida de médico é corrida..."
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/eb35d799483a4152ae191f1bef2cbf8a.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
+          <div class="testi-caption">
+            <strong>Confort Supremo</strong>
+            O lugar onde seu corpo respira
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="ph ph-2-3">
+            <video src="https://cdn.shopify.com/videos/c/o/v/e3a9daa16c954440b3a3c0bdf9a4813f.mp4" autoplay loop muted playsinline preload="metadata"></video>
+            <button type="button" class="testi-play" aria-label="Reproduzir vídeo">
+              <svg viewBox="0 0 80 80" fill="none" aria-hidden="true">
+                <circle cx="40" cy="40" r="38" stroke="#FFFFFF" stroke-width="1.5" opacity="0.95"/>
+                <path d="M33 26 L57 40 L33 54 Z" fill="#FFFFFF"/>
+              </svg>
+            </button>
+          </div>
+          <div class="testi-caption">
+            <strong>Cliente</strong>
+            [legenda — confirmar]
+          </div>
         </div>
       </div>
 
-      <div class="carousel-nav" aria-label="Navegação dos depoimentos">
-        <button type="button" class="carousel-arrow" aria-label="Anterior">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M15 18 L9 12 L15 6"/>
-          </svg>
-        </button>
-        <button type="button" class="carousel-arrow" aria-label="Próximo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M9 6 L15 12 L9 18"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="stats">
+      <div class="stats-row">
         <div>
           <p class="stat-num">98%</p>
-          <p class="stat-label">Dos que experimentam dão nota 10.</p>
+          <p class="stat-label">Dos que experimentam dão nota 10</p>
         </div>
         <div>
           <p class="stat-num">4+</p>
@@ -1232,44 +1954,49 @@ h2.h-display { font-size: var(--fs-2xl); }
   </section>
 
   <!-- ==========================================================
-       9. BUNDLE — 4 cards
+       9. BUNDLE — O QUE VEM JUNTO
        ========================================================== -->
   <section class="section bundle">
     <div class="container">
+      <h2 class="h-display">O que vem <strong>junto</strong> com a poltrona.</h2>
+
       <div class="bundle-grid">
         <div class="bcard">
-          <div class="bcard-img"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_17.jpg" alt="Garantia 3 anos" loading="lazy"></div>
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_17.jpg" alt="Atendimento e suporte" loading="lazy"></div>
           <h3>Garantia 3 anos full.</h3>
-          <p>Problema? A poltrona inteira é substituída. Sem análise técnica. Sem custo adicional. Você investiu no melhor — o melhor te garante de volta.</p>
+          <p>Problema? A poltrona inteira é substituída. Não a peça. A poltrona.
+             Sem análise técnica, sem custo adicional, sem burocracia.</p>
         </div>
         <div class="bcard">
-          <div class="bcard-img"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_18.jpg" alt="Entrega especializada" loading="lazy"></div>
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_18.jpg" alt="Entrega especializada" loading="lazy"></div>
           <h3>Entrega especializada.</h3>
-          <p>Entrega em todo o Brasil por transportadora especializada. Prazo e condições informados no checkout.</p>
+          <p>Transportadora especializada em carga premium, entrega agendada no horário
+             que funciona para você. Reerguemos ela do início ao fim.</p>
         </div>
         <div class="bcard">
-          <div class="bcard-img"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_19.jpg" alt="Atendimento premium" loading="lazy"></div>
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_19.jpg" alt="Atendimento premium" loading="lazy"></div>
           <h3>Atendimento premium.</h3>
-          <p>Consultoria de compra por WhatsApp. Fale com um especialista antes de decidir. Nenhum bot, nenhuma fila.</p>
+          <p>WhatsApp direto com especialista. Nenhum bot, nenhuma fila.
+             Pessoas reais que conhecem o produto e estão disponíveis durante e depois da compra.</p>
         </div>
         <div class="bcard">
-          <div class="bcard-img"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_27.jpg" alt="Garantia de origem" loading="lazy"></div>
-          <h3>Garantia de origem.</h3>
-          <p>Cada poltrona é produzida com componentes selecionados. Passa por inspeção rigorosa antes de sair da fábrica. Você recebe exatamente o que foi prometido.</p>
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_17.jpg" alt="Atendimento e suporte" loading="lazy"></div>
+          <h3>Garantia 3 anos full.</h3>
+          <p>Problema? A poltrona inteira é substituída. Não a peça. A poltrona.
+             Sem análise técnica, sem custo adicional, sem burocracia.</p>
         </div>
-      </div>
-
-      <div class="carousel-nav" aria-label="Navegação do bundle">
-        <button type="button" class="carousel-arrow" aria-label="Anterior">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M15 18 L9 12 L15 6"/>
-          </svg>
-        </button>
-        <button type="button" class="carousel-arrow" aria-label="Próximo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M9 6 L15 12 L9 18"/>
-          </svg>
-        </button>
+        <div class="bcard">
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_18.jpg" alt="Entrega especializada" loading="lazy"></div>
+          <h3>Entrega especializada.</h3>
+          <p>Transportadora especializada em carga premium, entrega agendada no horário
+             que funciona para você. Reerguemos ela do início ao fim.</p>
+        </div>
+        <div class="bcard">
+          <div class="ph ph-3-2"><img src="https://cdn.shopify.com/s/files/1/0985/2633/1245/files/FOTO_19.jpg" alt="Atendimento premium" loading="lazy"></div>
+          <h3>Atendimento premium.</h3>
+          <p>WhatsApp direto com especialista. Nenhum bot, nenhuma fila.
+             Pessoas reais que conhecem o produto e estão disponíveis durante e depois da compra.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1279,31 +2006,80 @@ h2.h-display { font-size: var(--fs-2xl); }
        ========================================================== -->
   <section class="section events" id="testar">
     <div class="container">
-      <h2>Sente antes de <strong>decidir.</strong></h2>
-      <div class="gold-line"></div>
+      <h2 class="h-display">Sente <strong>antes de decidir.</strong></h2>
       <p class="intro">Nos próximos eventos, a poltrona vai até você. Escolha a data mais perto.</p>
 
       <div>
         <div class="event-row">
           <div class="event-title">Porsche Experience São Paulo</div>
           <div class="event-meta">São Paulo · 18/03/2026</div>
-          <a href="#reservar" class="btn btn-ghost">Reservar Meu Lugar</a>
+          <a href="#reservar" class="btn btn-primary">Reservar Meu Lugar</a>
         </div>
         <div class="event-row">
           <div class="event-title">Porsche Experience São Paulo</div>
           <div class="event-meta">São Paulo · 18/03/2026</div>
-          <a href="#reservar" class="btn btn-ghost">Reservar Meu Lugar</a>
+          <a href="#reservar" class="btn btn-primary">Reservar Meu Lugar</a>
         </div>
         <div class="event-row">
           <div class="event-title">Porsche Experience São Paulo</div>
           <div class="event-meta">São Paulo · 18/03/2026</div>
-          <a href="#reservar" class="btn btn-ghost">Reservar Meu Lugar</a>
+          <a href="#reservar" class="btn btn-primary">Reservar Meu Lugar</a>
         </div>
         <div class="event-row">
           <div class="event-title">Porsche Experience São Paulo</div>
           <div class="event-meta">São Paulo · 18/03/2026</div>
-          <a href="#reservar" class="btn btn-ghost">Reservar Meu Lugar</a>
+          <a href="#reservar" class="btn btn-primary">Reservar Meu Lugar</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       11. FAQ
+       ========================================================== -->
+  <section class="section faq" id="faq">
+    <div class="container">
+      <div class="faq-header">
+        <p class="eyebrow">Dúvidas frequentes</p>
+        <h2>As perguntas que você tem <strong>(e ainda não fez).</strong></h2>
+        <p>Se ficar alguma, fale com a gente direto pelo WhatsApp.</p>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Como funciona a entrega?</summary>
+          <div class="faq-answer">
+            <p>Entrega em todo o Brasil por transportadora especializada em carga premium, com agendamento prévio para você receber no horário que funciona. Prazo e condições aparecem no checkout.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>A garantia cobre o quê exatamente?</summary>
+          <div class="faq-answer">
+            <p>Garantia de 3 anos full: se houver qualquer problema, a poltrona inteira é substituída — não a peça, a poltrona. Sem análise técnica, sem custo adicional, sem burocracia.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Posso parcelar?</summary>
+          <div class="faq-answer">
+            <p>Sim. Aceitamos parcelamento em todos os principais cartões. As condições e o número máximo de parcelas aparecem no checkout antes de finalizar a compra.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Como funciona o teste presencial?</summary>
+          <div class="faq-answer">
+            <p>Realizamos eventos por todo o Brasil em parceria com showrooms e marcas premium — você experimenta a poltrona antes de decidir. Veja a agenda em "Sente antes de decidir" e reserve seu horário.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>Por que não encontro em marketplaces?</summary>
+          <div class="faq-answer">
+            <p>A Confort Supremo é vendida apenas pelos canais oficiais. Isso garante origem, garantia válida, atendimento direto com especialistas e a integridade de cada unidade entregue.</p>
+          </div>
+        </details>
       </div>
     </div>
   </section>
@@ -1324,8 +2100,8 @@ h2.h-display { font-size: var(--fs-2xl); }
         <p class="footer-title">Footer Menu</p>
         <nav style="display:flex; flex-direction:column; gap:0.6rem;">
           <a href="produto.html">Produto</a>
-          <a href="#sobre">Sobre</a>
           <a href="#testar">Onde Testar</a>
+          <a href="#faq">FAQ</a>
           <a href="#contato">Contato</a>
         </nav>
       </div>
@@ -1364,6 +2140,73 @@ h2.h-display { font-size: var(--fs-2xl); }
         });
       });
     });
+
+    document.querySelectorAll('.testi-play').forEach(btn => {
+      btn.addEventListener('click', () => {
+        btn.classList.add('is-hidden');
+      });
+    });
+
+    // -------- Spaces timeline (auto-play + manual) --------
+    const spaces = document.getElementById('spaces');
+    if (spaces) {
+      const slots = Array.from(spaces.querySelectorAll('.spaces-slot'));
+      const imgs  = Array.from(spaces.querySelectorAll('.spaces-bg img'));
+      const sublabel = spaces.querySelector('.spaces-sublabel');
+      const labels = (spaces.dataset.sublabels || '').split('|');
+      const INTERVAL = 5000;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let current = 0;
+      let timer = null;
+      let manual = false;
+
+      function activate(idx) {
+        current = (idx + slots.length) % slots.length;
+        const key = slots[current].dataset.slot;
+        slots.forEach((s, i) => {
+          const active = i === current;
+          s.classList.toggle('is-active', active);
+          s.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        imgs.forEach(img => img.classList.toggle('is-active', img.dataset.slot === key));
+        if (sublabel && labels[current]) {
+          sublabel.classList.add('is-fading');
+          setTimeout(() => {
+            sublabel.textContent = labels[current];
+            sublabel.classList.remove('is-fading');
+          }, 200);
+        }
+      }
+
+      function startAutoplay() {
+        if (manual || reduced) return;
+        stopAutoplay();
+        timer = setInterval(() => activate(current + 1), INTERVAL);
+      }
+      function stopAutoplay() {
+        if (timer) { clearInterval(timer); timer = null; }
+      }
+
+      slots.forEach((slot, i) => {
+        slot.addEventListener('click', () => {
+          manual = true;
+          spaces.classList.add('is-manual');
+          stopAutoplay();
+          activate(i);
+        });
+      });
+
+      spaces.addEventListener('mouseenter', () => {
+        spaces.classList.add('is-paused');
+        stopAutoplay();
+      });
+      spaces.addEventListener('mouseleave', () => {
+        spaces.classList.remove('is-paused');
+        if (!manual) startAutoplay();
+      });
+
+      startAutoplay();
+    }
   })();
 </script>
 

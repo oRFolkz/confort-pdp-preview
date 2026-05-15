@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Confort Supremo — Seções extras (inspiradas no Instagram)</title>
+
+<!--
+  ============================================================
+  SEÇÕES EXTRAS INSPIRADAS NO INSTAGRAM DA MARCA
+  ============================================================
+  Arquivo separado com 4 seções prontas pra copiar/colar.
+  Cada seção é independente — pode levar 1, 2 ou todas pro
+  site principal.
+
+  Cada seção tem um comentário no início indicando:
+  - De qual peça do Instagram veio
+  - O que ela faz / qual o objetivo
+  - Como integrar no site principal
+
+  As variáveis CSS no :root são as MESMAS do site principal.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================
+   TOKENS — idênticos ao site principal
+   ========================================================== */
+:root {
+  --color-bg:            #FBF8F3;
+  --color-bg-elev:       #F4EDE2;
+  --color-bg-soft:       #E8DCC8;
+  --color-border:        #D8CBB6;
+  --color-text:          #3A2A1F;
+  --color-text-muted:    #6B5544;
+  --color-text-dim:      #A99378;
+  --color-accent:        #4A2E22;
+  --color-accent-hover:  #5C3B2C;
+  --color-accent-soft:   rgba(74, 46, 34, 0.08);
+
+  --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-body:    'Montserrat', system-ui, sans-serif;
+
+  --fw-thin:    200;
+  --fw-light:   300;
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-bold:    700;
+  --fw-black:   800;
+
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.5rem;
+  --fs-xl:   2rem;
+  --fs-2xl:  2.75rem;
+  --fs-3xl:  4rem;
+  --fs-4xl:  5.5rem;   /* extra: pra títulos massivos tipo "DISPLAY LCD" */
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --space-7: 6rem;
+
+  --container: 1240px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  --transition: 240ms cubic-bezier(.2,.7,.2,1);
+}
+
+/* RESET */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+.eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  margin: 0 0 var(--space-3);
+}
+.h-display {
+  font-weight: var(--fw-light);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.h-display strong { font-weight: var(--fw-bold); }
+.section { padding: var(--space-7) 0; }
+
+/* divisor entre seções pra você ver o limite */
+.section-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 0;
+  opacity: 0.5;
+}
+
+/* ==========================================================
+   SEÇÃO 1 — ENVOLVIMENTO
+   Inspiração: peça 1 do Instagram (cadeira + callouts conectados)
+   Adaptação: texto-fantasma no fundo, 4 callouts (não 2) com
+   linhas curvas conectando, cadeira em SVG no centro.
+   ========================================================== */
+.envolvimento {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-elev);
+}
+
+/* Texto-fantasma gigante no fundo (mesmo efeito do Insta) */
+.envolvimento .ghost-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(8rem, 18vw, 16rem);
+  font-weight: var(--fw-light);
+  color: var(--color-bg-soft);
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.envolvimento .container {
+  position: relative;
+  z-index: 1;
+}
+
+.envolvimento-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-4);
+  align-items: center;
+  min-height: 600px;
+}
+
+.envolvimento .chair-svg {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+}
+
+/* Callouts laterais */
+.callout {
+  position: relative;
+}
+.callout-text {
+  font-weight: var(--fw-light);
+  font-size: var(--fs-lg);
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.callout-text strong { font-weight: var(--fw-bold); }
+.callout-text em {
+  font-style: italic;
+  font-weight: var(--fw-light);
+}
+
+.callout-left {
+  text-align: right;
+  padding-right: var(--space-4);
+}
+.callout-right {
+  text-align: left;
+  padding-left: var(--space-4);
+}
+
+/* Stack vertical de callouts em cada lado */
+.callout-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Linhas conectoras decorativas */
+.callout::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  height: 1px;
+  background: var(--color-accent);
+}
+.callout-left::after {
+  right: 0;
+  transform-origin: right center;
+}
+.callout-right::after {
+  left: 0;
+}
+.callout::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  margin-top: -4px;
+}
+.callout-left::before { right: -4px; }
+.callout-right::before { left: -4px; }
+
+/* ==========================================================
+   SEÇÃO 3 — INTENSIDADE (3 níveis)
+   Inspiração: peça 3 do Instagram (cards verticais de
+   intensidade com tracking aberto)
+   Adaptação: tabela horizontal comparativa, mais útil na web
+   ========================================================== */
+.intensidade {
+  background: var(--color-bg-elev);
+}
+
+.intensidade-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto var(--space-6);
+}
+.intensidade-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: var(--fw-light);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--space-3);
+}
+.intensidade-title strong { font-weight: var(--fw-bold); }
+
+.intensidade-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.icard {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.icard:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-accent);
+}
+
+.icard-level {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-2);
+}
+
+.icard-name {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-light);
+  letter-spacing: 0.3em;
+  margin: 0 0 var(--space-1);
+  /* tracking massivo, como no Insta */
+}
+
+.icard-tag {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+/* Indicador visual de intensidade — barrinhas */
+.icard-bars {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: var(--space-3);
+}
+.icard-bar {
+  width: 6px;
+  height: 24px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+.icard-bar.is-on { background: var(--color-accent); }
+
+.icard-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ==========================================================
+   SEÇÃO 4 — INTELIGÊNCIA (Display LCD)
+   Inspiração: peça 4 do Instagram (título massivo + 4
+   benefícios com checkmark + controle embaixo)
+   Adaptação: mantém quase fiel, mas centralizado e com o
+   controle em SVG simples
+   ========================================================== */
+.inteligencia {
+  background: var(--color-bg);
+  text-align: center;
+}
+
+.inteligencia-eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-3);
+}
+
+.inteligencia-title {
+  font-size: clamp(2.5rem, 6vw, var(--fs-4xl));
+  font-weight: var(--fw-light);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+}
+.inteligencia-title strong {
+  font-weight: var(--fw-bold);
+  display: block;
+}
+
+.inteligencia-subtitle {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-bottom: var(--space-4);
+}
+
+.inteligencia-desc {
+  max-width: 580px;
+  margin: 0 auto var(--space-6);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.inteligencia-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4) var(--space-6);
+  max-width: 720px;
+  margin: 0 auto var(--space-6);
+}
+
+.benefit {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: var(--space-2);
+  align-items: center;
+  text-align: left;
+}
+.benefit-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+.benefit-text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.control-wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Texto-fantasma "INTELIGENTE" atrás do controle */
+.control-ghost {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: var(--fw-light);
+  color: var(--color-bg-soft);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.control-svg {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media (max-width: 960px) {
+  .section { padding: var(--space-6) 0; }
+
+  /* Seção 1 — Envolvimento */
+  .envolvimento-stage {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    min-height: auto;
+  }
+  .callout-left { text-align: center; padding: 0; }
+  .callout-right { text-align: center; padding: 0; }
+  .callout::before, .callout::after { display: none; }
+  .envolvimento .chair-svg { max-width: 240px; }
+  .envolvimento .ghost-text { font-size: 6rem; opacity: 0.4; }
+
+  /* Seção 3 — Intensidade */
+  .intensidade-grid { grid-template-columns: 1fr; }
+
+  /* Seção 4 — Inteligência */
+  .inteligencia-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SEÇÃO 1 — ENVOLVIMENTO
+     Para usar no site: copiar todo o <section class="envolvimento">
+     Sugestão de posicionamento: depois do Hero, antes da Transformação
+     OU substituir a seção de Features atual.
+     ============================================================ -->
+<section class="section envolvimento">
+  <div class="ghost-text">supremo</div>
+
+  <div class="container">
+    <p class="eyebrow" style="text-align: center;">Envolvimento</p>
+    <h2 class="h-display" style="text-align: center; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: var(--space-6);">
+      Massagem que <strong>envolve</strong><br>de corpo inteiro.
+    </h2>
+
+    <div class="envolvimento-stage">
+
+      <!-- Coluna esquerda: callouts -->
+      <div class="callout-stack">
+        <div class="callout callout-left">
+          <p class="callout-text">Massagem<br><em>envolvente</em></p>
+        </div>
+        <div class="callout callout-left">
+          <p class="callout-text">Airbag<br><em>multipontos</em></p>
+        </div>
+      </div>
+
+      <!-- Centro: cadeira SVG ilustrativa simples -->
+      <svg class="chair-svg" viewBox="0 0 240 320" xmlns="http://www.w3.org/2000/svg" aria-label="Poltrona Confort Supremo">
+        <!-- Silhueta estilizada da poltrona, vista frontal/perspectiva -->
+        <defs>
+          <linearGradient id="leather1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6B4A35"/>
+            <stop offset="100%" stop-color="#3A2A1F"/>
+          </linearGradient>
+          <linearGradient id="leather2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8B6648"/>
+            <stop offset="100%" stop-color="#5C3B2C"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Encosto principal -->
+        <path d="M 60 30 Q 60 15 75 15 L 165 15 Q 180 15 180 30 L 180 140 Q 180 155 165 155 L 75 155 Q 60 155 60 140 Z"
+              fill="url(#leather1)" stroke="#2A1A12" stroke-width="1.5"/>
+        <!-- Apoio de cabeça -->
+        <rect x="90" y="35" width="60" height="50" rx="8" fill="url(#leather2)" stroke="#2A1A12" stroke-width="1"/>
+        <!-- Costura decorativa -->
+        <path d="M 90 50 L 150 50 M 90 65 L 150 65" stroke="#2A1A12" stroke-width="0.5" opacity="0.6"/>
+
+        <!-- Braços laterais -->
+        <path d="M 30 100 L 30 220 Q 30 240 50 240 L 60 240 L 60 100 Q 60 95 55 95 L 35 95 Q 30 95 30 100 Z"
+              fill="url(#leather1)" stroke="#2A1A12" stroke-width="1.5"/>
+        <path d="M 180 100 L 180 240 Q 180 240 200 240 L 210 240 L 210 100 Q 210 95 205 95 L 185 95 Q 180 95 180 100 Z"
+              fill="url(#leather1)" stroke="#2A1A12" stroke-width="1.5"/>
+
+        <!-- Assento -->
+        <path d="M 50 155 L 190 155 Q 200 155 200 165 L 200 230 Q 200 240 190 240 L 50 240 Q 40 240 40 230 L 40 165 Q 40 155 50 155 Z"
+              fill="url(#leather2)" stroke="#2A1A12" stroke-width="1.5"/>
+
+        <!-- Apoio para pés -->
+        <path d="M 60 245 L 180 245 Q 190 245 190 255 L 190 290 Q 190 300 180 300 L 60 300 Q 50 300 50 290 L 50 255 Q 50 245 60 245 Z"
+              fill="url(#leather1)" stroke="#2A1A12" stroke-width="1.5"/>
+
+        <!-- Detalhes acolchoamento (linhas decorativas no assento) -->
+        <path d="M 80 175 L 80 230 M 120 175 L 120 230 M 160 175 L 160 230"
+              stroke="#2A1A12" stroke-width="0.6" opacity="0.5"/>
+
+        <!-- Base -->
+        <ellipse cx="120" cy="310" rx="80" ry="6" fill="#2A1A12" opacity="0.4"/>
+
+        <!-- Logo confort supremo (pequenininho no encosto) -->
+        <text x="120" y="100" text-anchor="middle" fill="#D4A574" font-family="Montserrat, sans-serif"
+              font-size="6" font-weight="300" letter-spacing="0.5">confort supremo</text>
+      </svg>
+
+      <!-- Coluna direita: callouts -->
+      <div class="callout-stack">
+        <div class="callout callout-right">
+          <p class="callout-text">De corpo<br><strong>inteiro</strong></p>
+        </div>
+        <div class="callout callout-right">
+          <p class="callout-text">22 pontos<br><em>de pressão</em></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================================================
+     SEÇÃO 3 — INTENSIDADE
+     Para usar no site: ótima pra inserir como complemento da
+     anatomia, ou logo antes da seção "O que vem junto".
+     ============================================================ -->
+<section class="section intensidade">
+  <div class="container">
+
+    <div class="intensidade-header">
+      <p class="eyebrow">Personalização</p>
+      <h2 class="intensidade-title">
+        <strong>3 ajustes</strong> de intensidade.<br>
+        Uma para cada momento do seu dia.
+      </h2>
+    </div>
+
+    <div class="intensidade-grid">
+
+      <div class="icard">
+        <p class="icard-level">Nível 01</p>
+        <h3 class="icard-name">S U A V E</h3>
+        <p class="icard-tag">Compressão gentil</p>
+        <div class="icard-bars">
+          <div class="icard-bar is-on"></div>
+          <div class="icard-bar"></div>
+          <div class="icard-bar"></div>
+        </div>
+        <p class="icard-desc">
+          Para começar o dia ou desacelerar antes de dormir.
+          Pressão leve que prepara o corpo sem invadir.
+        </p>
+      </div>
+
+      <div class="icard">
+        <p class="icard-level">Nível 02</p>
+        <h3 class="icard-name">M O D E R A D A</h3>
+        <p class="icard-tag">Força moderada</p>
+        <div class="icard-bars">
+          <div class="icard-bar is-on"></div>
+          <div class="icard-bar is-on"></div>
+          <div class="icard-bar"></div>
+        </div>
+        <p class="icard-desc">
+          O ponto de equilíbrio. Recuperação efetiva sem desconforto.
+          A escolha que a maioria adota como padrão.
+        </p>
+      </div>
+
+      <div class="icard">
+        <p class="icard-level">Nível 03</p>
+        <h3 class="icard-name">P R O F U N D A</h3>
+        <p class="icard-tag">Pressão profunda</p>
+        <div class="icard-bars">
+          <div class="icard-bar is-on"></div>
+          <div class="icard-bar is-on"></div>
+          <div class="icard-bar is-on"></div>
+        </div>
+        <p class="icard-desc">
+          Para quem chega no limite. Massagem que alcança onde
+          a tensão se esconde há semanas.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ============================================================
+     SEÇÃO 4 — INTELIGÊNCIA (Display LCD)
+     Para usar no site: ótima como seção de tecnologia, pode
+     vir antes ou depois da anatomia.
+     ============================================================ -->
+<section class="section inteligencia">
+  <div class="container">
+
+    <p class="inteligencia-eyebrow">Tecnologia</p>
+    <h2 class="inteligencia-title">
+      Display LCD<br>
+      <strong>Inteligente</strong>
+    </h2>
+    <p class="inteligencia-subtitle">Alta definição com toque inteligente</p>
+
+    <p class="inteligencia-desc">
+      Acesso instantâneo para gerenciar suas necessidades de massagem
+      sem esforço. Interface intuitiva com controles personalizáveis
+      para uma experiência única.
+    </p>
+
+    <div class="inteligencia-grid">
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <p class="benefit-text">Controle automático<br>de airbags</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <p class="benefit-text">Programas pré-definidos<br>personalizáveis</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <p class="benefit-text">Ajuste de intensidade<br>em tempo real</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <p class="benefit-text">Timer e controle<br>de aquecimento</p>
+      </div>
+    </div>
+
+    <!-- Controle remoto / display LCD em SVG -->
+    <div class="control-wrapper">
+      <div class="control-ghost">inteligente</div>
+
+      <svg class="control-svg" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg" aria-label="Controle remoto LCD da poltrona">
+        <defs>
+          <linearGradient id="controlBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3A2A1F"/>
+            <stop offset="100%" stop-color="#2A1A12"/>
+          </linearGradient>
+          <linearGradient id="screenBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a1a1a"/>
+            <stop offset="100%" stop-color="#0a0a0a"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Corpo do controle (cinza prata) -->
+        <rect x="20" y="40" width="360" height="180" rx="20" fill="#C4B5A0" stroke="#8B7A60" stroke-width="1.5"/>
+
+        <!-- Borda interna -->
+        <rect x="30" y="50" width="340" height="160" rx="14" fill="url(#controlBg)"/>
+
+        <!-- Tela LCD à esquerda -->
+        <rect x="50" y="70" width="180" height="120" rx="6" fill="url(#screenBg)" stroke="#C9A56B" stroke-width="0.5"/>
+
+        <!-- "Conteúdo" simulado na tela -->
+        <rect x="60" y="80" width="60" height="6" rx="1" fill="#4ade80" opacity="0.7"/>
+        <text x="62" y="78" font-family="Montserrat, monospace" font-size="5" fill="#4ade80" opacity="0.6">SPEED</text>
+
+        <rect x="130" y="80" width="60" height="6" rx="1" fill="#4ade80" opacity="0.7"/>
+        <text x="132" y="78" font-family="Montserrat, monospace" font-size="5" fill="#4ade80" opacity="0.6">ROLLER</text>
+
+        <rect x="60" y="95" width="60" height="6" rx="1" fill="#4ade80" opacity="0.7"/>
+        <text x="62" y="93" font-family="Montserrat, monospace" font-size="5" fill="#4ade80" opacity="0.6">WIDTH</text>
+
+        <rect x="130" y="95" width="60" height="6" rx="1" fill="#facc15" opacity="0.7"/>
+        <text x="132" y="93" font-family="Montserrat, monospace" font-size="5" fill="#facc15" opacity="0.6">INTENSITY</text>
+
+        <!-- Display de tempo grande -->
+        <text x="80" y="155" font-family="Montserrat, sans-serif" font-size="32" font-weight="300" fill="#C9A56B">15</text>
+        <text x="118" y="155" font-family="Montserrat, sans-serif" font-size="10" fill="#C9A56B" opacity="0.7">TIME</text>
+
+        <!-- Figura humana esquemática -->
+        <g transform="translate(160, 110)" opacity="0.6">
+          <circle cx="20" cy="8" r="6" fill="none" stroke="#C9A56B" stroke-width="1"/>
+          <path d="M 14 18 L 14 50 M 26 18 L 26 50 M 14 28 L 26 28 M 10 60 L 14 50 M 30 60 L 26 50"
+                stroke="#C9A56B" stroke-width="1" fill="none"/>
+        </g>
+
+        <!-- Grid de botões à direita -->
+        <g transform="translate(250, 70)">
+          <!-- Row 1 -->
+          <rect x="0" y="0" width="50" height="20" rx="10" fill="#E85D4A"/>
+          <text x="25" y="13" text-anchor="middle" font-family="Montserrat" font-size="6" fill="white">On/off</text>
+
+          <rect x="60" y="0" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="85" y="13" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Auto mode</text>
+
+          <!-- Row 2 -->
+          <rect x="0" y="28" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="25" y="41" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Manual</text>
+
+          <rect x="60" y="28" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="85" y="41" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Back up</text>
+
+          <!-- Row 3 -->
+          <rect x="0" y="56" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="25" y="69" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Up</text>
+
+          <rect x="60" y="56" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="85" y="69" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Back down</text>
+
+          <!-- Row 4 -->
+          <rect x="0" y="84" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="25" y="97" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Speed</text>
+
+          <rect x="60" y="84" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="85" y="97" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Airbag</text>
+
+          <!-- Row 5 -->
+          <rect x="0" y="112" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="25" y="125" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Position</text>
+
+          <rect x="60" y="112" width="50" height="20" rx="10" fill="#3a3a3a" stroke="#C9A56B" stroke-width="0.3"/>
+          <text x="85" y="125" text-anchor="middle" font-family="Montserrat" font-size="6" fill="#C9A56B">Heating</text>
+        </g>
+
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>
