@@ -472,11 +472,12 @@ h2.h-display { font-size: var(--fs-2xl); }
   flex-direction: column;
   justify-content: center;
   padding: var(--space-6) var(--space-5);
-  padding-right: max(var(--space-5), calc((100vw - var(--container)) / 2 + var(--space-4)));
-  max-width: 640px;
+  max-width: 560px;
 }
 .experience h2 {
-  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  font-size: clamp(1.4rem, 2.1vw, 2rem);
+  line-height: 1.15;
+  text-wrap: balance;
   margin-bottom: var(--space-4);
 }
 .experience .big-stat {
